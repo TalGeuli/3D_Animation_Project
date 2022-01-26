@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/imgui-download"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/3735e025d631be3c26e6fa814378924e/imgui-download.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/4a73fe2122aaa5e2fa394cf4c5fb71c8/imgui-download-complete.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-build.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-configure.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-download.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-install.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-mkdir.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-patch.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-test.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"imgui-download"
+		],
+		"name" : "imgui-download"
+	}
+}

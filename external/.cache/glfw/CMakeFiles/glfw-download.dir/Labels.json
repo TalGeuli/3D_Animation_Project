@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/glfw-download"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/de98dbb6d932b28caa513f4185405a92/glfw-download.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/bb42b35736707ba10cf50c37dc7f2ff7/glfw-download-complete.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/92c39f782bc42d7b4903f9d7f9859f18/glfw-download-build.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/92c39f782bc42d7b4903f9d7f9859f18/glfw-download-configure.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/92c39f782bc42d7b4903f9d7f9859f18/glfw-download-download.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/92c39f782bc42d7b4903f9d7f9859f18/glfw-download-install.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/92c39f782bc42d7b4903f9d7f9859f18/glfw-download-mkdir.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/92c39f782bc42d7b4903f9d7f9859f18/glfw-download-patch.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/92c39f782bc42d7b4903f9d7f9859f18/glfw-download-test.rule"
+		},
+		{
+			"file" : "D:/Animation3DProjects/Project/external/.cache/glfw/CMakeFiles/92c39f782bc42d7b4903f9d7f9859f18/glfw-download-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"glfw-download"
+		],
+		"name" : "glfw-download"
+	}
+}

@@ -1,0 +1,14 @@
+# Target labels
+ imgui-download
+# Source files and their labels
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/imgui-download
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/3735e025d631be3c26e6fa814378924e/imgui-download.rule
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/4a73fe2122aaa5e2fa394cf4c5fb71c8/imgui-download-complete.rule
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-build.rule
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-configure.rule
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-download.rule
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-install.rule
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-mkdir.rule
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-patch.rule
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-test.rule
+D:/Animation3DProjects/Project/external/.cache/imgui/CMakeFiles/a8e180d4fba889e47e0909d65117896e/imgui-download-update.rule
