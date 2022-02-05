@@ -106,26 +106,33 @@ namespace glfw
 
   void Viewer::Set_Tip()
   {
-      Eigen::Vector3d O = (Joints[1].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
+      Eigen::Vector3d O = (Joints[0].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
       Eigen::Matrix3d r;
       Eigen::Vector3d l;
       //start_position = O + data_list[1].GetRotation() * Eigen::Vector3d(0, 0, -0.8);
-      tips[0] = O + data_list[0].GetRotation() * Eigen::Vector3d(0, 0, -0.8);
-
-      for (int i = 1; i < Num_Of_Joints; i++)
+      //skelton[0] = O + Joints[0].GetRotation() * Eigen::Vector3d(0, 0, -0.8);
+      skelton[0] = O + Joints[0].GetRotation() * Eigen::Vector3d(0, 0, -0.8);
+     // std::cout << "the current position of the 0 joint is: \n";
+      //std::cout << skelton[0] << "\n";
+      for (int i = 1; i < Num_Of_Joints+1; i++)
       {
+         
           r = Joints[i].GetRotation();
           for (int j = i - 1; j > 0; j--)
           {
               r = Joints[j].GetRotation() * r;
           }
+
           l(0) = 0;
           l(1) = 0;
-          l(2) = 0.1*scale;
+          l(2) = 0.1 * scale;
           O = O + r * l;
+          
           skelton[i] = O;
+          //std::cout << "the current position of the (skelton[i])" << i << " joint is: \n";
+          //std::cout << skelton[i] << "\n";
       }
-
+      
       //tip_position = O;
 
   }
@@ -202,86 +209,163 @@ namespace glfw
       
   }
 
+  Eigen::VectorXd Viewer::creatWiVector(Eigen::Vector4d temp)
+  {
+      Eigen::VectorXd Wi;
+      Wi.resize(17);
+      double weight1 = temp[0];
+      double index1 = temp[1];
+      double weight2 = temp[2];
+      double index2 = temp[3];
+      /*std::cout << weight1 << " - weight1\n";
+      std::cout << index1 << " - index1\n";
+      std::cout << weight2 << " - weight2\n";
+      std::cout << index2 << " - index2\n";
+      */
+      for (double i = 0; i < 17; i++)
+      {
+          if (i == index1)
+              Wi[index1] = weight1;
+          else {
+              if (i == index2)
+                  Wi[index2] = weight2;
+              else
+                  Wi[i] = 0;
+          }
+      }
+      return Wi;
+
+  }
+
   void Viewer::Calculate_Weights()
   {
       int numOfV = data_list.at(0).V.rows();
+      Eigen::MatrixXd V = data_list.at(0).V;
       W.resize(numOfV, 17);
-      //double radius = 0.8 * (double)scale;
-      //Eigen::VectorXd distancesVec;
-      //distancesVec.resize(skelton.size());
-      double biggerMin;
-      double smallerMin;
-      int smallerIndex = 0, biggerIndex = 0;
-      //int distanceIndex;
+      double zCord;
+      double lowBound, upBound;
+      double weight1, weight2;
+      Eigen::VectorXd weightVector;
       for (int i = 0; i < numOfV; i++)
       {
-          biggerMin = 2;
-          smallerMin = 2;
-          double distancesSum = 0;
-          //std::cout << i << " = index \n";
-          for (int j = 0; j < skelton.size(); j++)
-          {
-              
-              double d = (data_list.at(0).V.row(i) - skelton.at(j).transpose()).norm();
-              //std::cout << d << "\n";
-              if (d < smallerMin)
-              {
-                  biggerMin = smallerMin;
-                  smallerMin = d;
-                  biggerIndex = smallerIndex;
-                  smallerIndex = j;
-              }
-              else if (d < biggerMin)
-              {
-                  biggerMin = d;
-                  biggerIndex = j;
-              }
-          }
-          //std::cout << biggerMin << " = biggerMin\n";
-          //std::cout << smallerMin << " = smallerMin\n";
-          double wij;
-          distancesSum = smallerMin + biggerMin;
-          for (int j = 0; j < skelton.size(); j++)
-          {
-              wij = 0;
-              if (j == smallerIndex)
-                  wij = smallerMin / distancesSum;
-              if (j == biggerIndex)
-                  wij = biggerMin / distancesSum;
-              W.row(i)[j] = wij;
-          }
+          zCord = V.row(i)[2];
+          lowBound = (floor(zCord * 10)) / 10;
+          upBound = (ceil(zCord * 10)) / 10;
+          weight1 = abs(zCord - upBound) * 10;
+          weight2 = 1 - weight1;
+          W.row(i) = creatWiVector(Eigen::Vector4d(weight1, lowBound * 10 + 8, weight2, upBound * 10 + 8));
+         // std::cout << i << " weightVector \n";
+          //std::cout << W.row(i) << "\n";
       }
-      //std::cout << W << "\n";
+     
+      
   }
 
+
+  void Viewer::CalcNextPosition()
+  {
+      for (int i = 0; i < Num_Of_Joints + 1; i++)
+      {
+          vT[i] = skelton[i];
+      }
+      for (size_t i = 0; i < Num_Of_Joints; i++)
+      {
+          vT[i] = vT[i] + (vT[i + 1] - vT[i]) / 6;
+      }
+      vT[Num_Of_Joints] = vT[Num_Of_Joints] + destination_position;
+  }
+
+
+
+
+
+  //Not In Use Right Now
   void Viewer::Fabrik()
   {
-
-      vT[link_number] = Joints[Num_Of_Joints].GetCenter();
-      for (int i = Num_Of_Joints - 1; i >= 0; i--)
-      {
-          Eigen::Vector3d curr = vT[i];
-          Eigen::Vector3d next = vT[i + 1];
-          double ri = (curr - next).norm();
-          double offset = 1.6 / ri;
-          vT[i] = (1 - offset) * next + curr * offset;
-
-      }
-    
-     /* vT[0] = Joints[1].GetCenter();
+     //forward
+      vT[0] = Eigen::Vector3d(0,0,-0.8);
       for (int i = 0; i < Num_Of_Joints; i++)
       {
           Eigen::Vector3d curr = vT[i];
           Eigen::Vector3d prev = vT[i + 1];
           double ri = (curr - prev).norm();
-          double offset = 1.6 / ri;
+          double offset = (0.1 * scale) / ri;
           vT[i + 1] = (1 - offset) * curr + prev * offset;
+          //std::cout << "the next position of the " << i << " joint is: \n";
+          //std::cout << vT[i] << "\n";
       }
-      */
 
+      //backward
+      //vT[Num_Of_Joints] = (Joints[0].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
+      vT[Num_Of_Joints] = destination_position;
+      //std::cout << "the next position of the 16 joint is: \n";
+      //std::cout << vT[Num_Of_Joints] << "\n";
+      for (int i = Num_Of_Joints - 1; i >= 0; i--)
+      {
+          Eigen::Vector3d curr = vT[i];
+          Eigen::Vector3d next = vT[i + 1];
+          double ri = (curr - next).norm();
+          double offset = (0.1 * scale) / ri;
+          vT[i] = (1 - offset) * next + curr * offset;
+          //std::cout << "the next position of the " << i << " joint is: \n";
+          //std::cout << vT[i] << "\n";
+
+      }
+    
   }
 
-  
+  void Viewer::moveChain()
+  {
+      Eigen::Vector3d currVec;
+      Eigen::Vector3d destVec;
+      double angle;
+      double tempAngle;
+      for (int i = 0; i < Num_Of_Joints; i++)
+      {
+          currVec = skelton[i] - skelton[i + 1];
+          destVec = vT[i] - vT[i + 1];
+          tempAngle = currVec.normalized().dot(destVec.normalized());
+          if (tempAngle > 1)
+              tempAngle = 1;
+          if (tempAngle < -1)
+              tempAngle = -1;
+          angle = acos(tempAngle);
+          Eigen::Vector3d almostrotVec = currVec.cross(destVec);
+          Eigen::Vector4d rotVec(almostrotVec(0), almostrotVec(1), almostrotVec(2), 0);
+          Joints[i+1].MyRotate(((CalcParentsTransForJoints(i+1) * Joints[i+1].MakeTransd()).inverse() * rotVec).head(3), angle / 10);
+          Set_Tip();
+      }
+    
+  }
+
+  void Viewer::Fix_rotarion()
+  {
+      Eigen::Vector3d V(0, 0, 1);
+      for (int i = 0; i <= Num_Of_Joints; i++)
+      {
+          Eigen::Matrix3d rotMatrix = Joints[i].GetRotation();
+          Eigen::Vector3d euler_angle = rotMatrix.eulerAngles(2, 0, 2);
+          float z = euler_angle[2];
+          Joints[i].MyRotate(V, -z);
+          if (i < Num_Of_Joints)
+              Joints[i+1].RotateInSystem(V, z);
+
+      }
+  }
+
+
+  Eigen::Matrix4d Viewer::CalcParentsTransForJoints(int indx)
+  {
+      Eigen::Matrix4d prevTrans = Eigen::Matrix4d::Identity();
+
+      for (int i = indx; parents[i] >= 0; i = parents[i])
+      {
+          //std::cout << "parent matrix:\n" << scn->data_list[scn->parents[i]].MakeTrans() << std::endl;
+          prevTrans = Joints[parents[i]].MakeTransd() * prevTrans;
+      }
+
+      return prevTrans;
+  }
 
 
   //------------------------------------------------Project-----------------------------------

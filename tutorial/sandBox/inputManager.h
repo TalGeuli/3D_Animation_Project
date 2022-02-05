@@ -2,6 +2,7 @@
 #include "igl/opengl/glfw/Display.h"
 #include "igl/opengl/glfw/Renderer.h"
 #include "sandBox.h"
+#include "igl/look_at.h"
 //#include <igl/opengl/glfw/imgui/ImGuiMenu.h>
 //#include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
 //#include <../imgui/imgui.h>
@@ -108,6 +109,7 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 {
 	Renderer* rndr = (Renderer*) glfwGetWindowUserPointer(window);
 	Eigen::Vector3d tmp;
+	Eigen::Vector3f temp;
 	SandBox* scn = (SandBox*)rndr->GetScene();
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
@@ -171,6 +173,17 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 		case 's':
 		case 'S':
 			rndr->TranslateCamera(Eigen::Vector3f(0, 0, -0.03f));
+			break;
+		case 'z':
+		case 'Z':
+			temp[0] = float(scn->skelton.at(16)[0]);
+			std::cout << temp[0] << "\n";
+			temp[1] = float(scn->skelton.at(16)[1]);
+			std::cout << temp[1] << "\n";
+			temp[2] = float(scn->skelton.at(16)[2]);
+			std::cout << temp[2] << "\n";
+			//rndr->TranslateCamera(temp);
+			
 			break;
 		case GLFW_KEY_C:
 			tmp = (scn->MakeTransd().inverse() * Eigen::Vector4d(0, 0, 0, 1)).head<3>();

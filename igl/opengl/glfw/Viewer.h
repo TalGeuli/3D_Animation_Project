@@ -55,6 +55,11 @@ namespace glfw
     void Viewer::Create_bounding_box();
     void Viewer::Calculate_Weights();
     void Viewer::Fabrik();
+    Eigen::Matrix4d Viewer::CalcParentsTransForJoints(int indx);
+    void Viewer::moveChain();
+    Eigen::VectorXd Viewer::creatWiVector(Eigen::Vector4d temp);
+    void Viewer::Fix_rotarion();
+    void Viewer::CalcNextPosition();
     //----------------------------------Project----------------------------------
 
 
@@ -154,9 +159,7 @@ public:
 
     //-------------------------------Project-------------------------------
 
-    std::vector<Eigen::Vector3d>tips;
-    std::vector<Eigen::Vector3d>chain;
-    int link_number;
+    
     Eigen::Vector3d destination_position;
     
     int scale;
