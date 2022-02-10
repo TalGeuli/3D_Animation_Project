@@ -85,7 +85,7 @@ public:
 
 	// Callbacks
 	 double Picking(double x, double y);
-	 inline void Animate() { scn->Animate(); };
+	 inline void Animate() { scn->Animate(); moveToSnakePosition(); };
 	IGL_INLINE bool key_pressed(unsigned int unicode_key, int modifier);
 	IGL_INLINE void resize(GLFWwindow* window,int w, int h); // explicitly set window size
 	IGL_INLINE void post_resize(GLFWwindow* window, int w, int h); // external resize due to user interaction
@@ -104,6 +104,12 @@ public:
 	void TranslateCamera(Eigen::Vector3f amt);
 	void RotateCamera(float amtX, float amtY);
 	inline bool IsPicked() { return scn->isPicked; }
+	//------------------------------Project-----------------------------------------------------
+	
+	void moveToSnakePosition();
+
+	//------------------------------Project-----------------------------------------------------
+
 	
 private:
 	// Stores all the viewing options

@@ -16,6 +16,7 @@
 #include "igl/opengl/glfw/imgui/imgui_impl_glfw.h"
 #include "igl/opengl/glfw/imgui/imgui_impl_opengl3.h"
 
+
 //#include <imgui_fonts_droid_sans.h>
 //#include <GLFW/glfw3.h>
 #include <iostream>
@@ -32,8 +33,9 @@ namespace imgui
 
 IGL_INLINE void ImGuiMenu::init(Display* disp)
 {
+    //ImGui::ShowDemoWindow();
   // Setup ImGui binding
-  if (disp->window)
+ if (disp->window)
   {
     IMGUI_CHECKVERSION();
     if (!context_)
@@ -52,6 +54,7 @@ IGL_INLINE void ImGuiMenu::init(Display* disp)
     style.FrameRounding = 5.0f;
     reload_font();
   }
+  
 }
 
 IGL_INLINE void ImGuiMenu::reload_font(int font_size)
@@ -175,14 +178,16 @@ IGL_INLINE void ImGuiMenu::draw_viewer_window(igl::opengl::glfw::Viewer* viewer,
   ImGui::SetNextWindowSize(ImVec2(0.0f, 0.0f), ImGuiSetCond_FirstUseEver);
   ImGui::SetNextWindowSizeConstraints(ImVec2(menu_width, -1.0f), ImVec2(menu_width, -1.0f));
   bool _viewer_menu_visible = true;
-
-
+  
+  bool open = true;
+  ImGui::ShowDemoWindow(&open);
   
 }
 
 
 IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, std::vector<igl::opengl::ViewerCore>& core)
 {
+        
     bool* p_open = NULL;
     static bool no_titlebar = false;
     static bool no_scrollbar = false;
@@ -194,6 +199,10 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     static bool no_nav = false;
     static bool no_background = false;
     static bool no_bring_to_front = false;
+    static bool welcomeWindow = true;
+    static int clickedStart = 0;
+    static int clickedExit = 0;
+    static int clicked = 0;
 
     ImGuiWindowFlags window_flags = 0;
     if (no_titlebar)        window_flags |= ImGuiWindowFlags_NoTitleBar;
@@ -205,11 +214,116 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     if (no_nav)             window_flags |= ImGuiWindowFlags_NoNav;
     if (no_background)      window_flags |= ImGuiWindowFlags_NoBackground;
     if (no_bring_to_front)  window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+    
+    
+    
+   
+    
+    
+    if (welcomeWindow)
+    {
+        ImGui::SetNextWindowPos(ImVec2(1, 1), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(1200, 800), ImGuiCond_FirstUseEver);
+        if (!ImGui::Begin("Snake Game", p_open, window_flags))
+        {
+            // Early out if the window is collapsed, as an optimization.
+            ImGui::End();
+            return;
+        }
+        ImGui::Text("Dear player, Welcome!", IMGUI_VERSION);
+        static int clickedStart = 0;
+        static int clickedExit = 0;
+        if (ImGui::Button("Start"))
+            clickedStart++;
+        if (clickedStart & 1)
+        {
+            welcomeWindow = false;
+            viewer->levelWindow = true;
+            
+        }
+        
 
+       /* bool open = true;
+        if (open) {
+            ImGui::ShowDemoWindow(&open);
+
+        } */
+        ImGui::End();
+       
+    }
+    
+    if (viewer->levelWindow)
+    {
+        ImGui::SetNextWindowPos(ImVec2(1, 1), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(300, 800), ImGuiCond_FirstUseEver);
+        if (!ImGui::Begin("Status ", p_open, window_flags))
+        {
+            ImGui::End();
+            return;
+        }
+        if (!viewer->finishLevel)
+        {
+            ImGui::Text("Level: %d", viewer->level);
+            ImGui::Text("Score: %d", viewer->score);
+        }
+        else
+            viewer->levelWindow = false;
+        ImGui::End();
+        
+    }
+
+    if (viewer->finishLevel)
+    {
+        ImGui::SetNextWindowPos(ImVec2(1, 1), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(1200, 800), ImGuiCond_FirstUseEver);
+        if (!ImGui::Begin("Snake Game", p_open, window_flags))
+        {
+          
+            ImGui::End();
+            return;
+        }
+        ImGui::Text("Congragulation! you have moved to the next level");
+        if (ImGui::Button("Continue to the next level"))
+            clicked++;
+        if (clicked & 1)
+        {
+            viewer->levelWindow = true;
+            viewer->finishLevel = false;
+            viewer->level++;
+            viewer->score = 0;
+            clicked = 0;
+            
+        }
+        
+    
+        ImGui::End();
+    }
+
+
+    
+    
+   /*
+    int clickedStart
+    int 
+    ImGui::SetNextWindowPos(ImVec2(1, 1), ImGuiCond_FirstUseEver);
+    ImGui::SetNextWindowSize(ImVec2(1200, 800), ImGuiCond_FirstUseEver);
+    if (!ImGui::Begin("Snake Game", p_open, window_flags))
+    {
+        // Early out if the window is collapsed, as an optimization.
+        ImGui::End();
+        return;
+    }
+    ImGui::Text("Dear player, Welcome!", IMGUI_VERSION);
+    if (ImGui::CollapsingHeader("Widgets"))
+        clicked++;
+    if (clikedStart>0)
+        //strat the game
+    */
+    /*
     ImGui::Begin(
         "Viewer", p_open,
         window_flags
-    );
+        );
     ImGui::SetWindowPos(ImVec2(core[0].viewport[0], core[0].viewport[1]), ImGuiCond_Always);
     ImGui::SetWindowSize(ImVec2(core[0].viewport[2], core[0].viewport[3]), ImGuiCond_Always);
     ImGui::End();
@@ -281,8 +395,8 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
   };
      /* ImGui::ColorEdit4("Background", core[1].background_color.data(),
       ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueWheel);*/
-
-
+    
+/*
   // Draw options
   if (ImGui::CollapsingHeader("Draw Options", ImGuiTreeNodeFlags_DefaultOpen))
   {
@@ -297,7 +411,11 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     }
     make_checkbox("Show overlay", viewer->data().show_overlay);
     make_checkbox("Show overlay depth", viewer->data().show_overlay_depth);
-    
+    // ------------------------------------project---------------------------------------------------
+    //Background color
+    ImGui::ColorEdit4("Background", core[1].background_color.data(),
+        ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueWheel);
+    //------------------------------------project----------------------------------------------------
     ImGui::ColorEdit4("Line color", viewer->data().line_color.data(),
         ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueWheel);
     ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.3f);
@@ -312,7 +430,26 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     make_checkbox("Fill", viewer->data().show_faces);
 
   }
-  ImGui::End();
+  // ----------------------------------project---------------------------------------------------------------
+  
+  if (ImGui::CollapsingHeader("Game Info", ImGuiTreeNodeFlags_DefaultOpen))
+  {
+      //Score buttom
+       if (ImGui::Button("Score", ImVec2(-1, 0)))
+       {
+           std::cout << "Your current score is: "<< viewer->score << "\n";
+       }
+       //Level buttom
+       if (ImGui::Button("Level", ImVec2(-1, 0)))
+       {
+           std::cout << "Your current level is: " << viewer->level << "\n";
+       }
+       
+
+  }
+ */
+  //----------------------------------project---------------------------------------------------------------
+ // ImGui::End();
 }
 
 IGL_INLINE void ImGuiMenu::draw_labels_window(igl::opengl::glfw::Viewer* viewer,  const igl::opengl::ViewerCore* core)

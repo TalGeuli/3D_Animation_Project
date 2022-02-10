@@ -4,9 +4,10 @@
 #include "igl/dqs.h"
 #include "Eigen/dense"
 #include <functional>
-
-int k, o = 0;
-bool yossi = false;
+#include <windows.h>
+#include <mmsystem.h>
+//#pragma comment(lib,"Winmm.lib")
+//#include <iostream>
 
 SandBox::SandBox()
 {
@@ -25,14 +26,23 @@ void SandBox::Init(const std::string &config)
 	up = false;
 	down = false;
 
+	snakeEye = 0;
+	level = 1;
+	score = 0;
+	finishLevel = false;
+	levelWindow = false;
+
 	Num_Of_Joints = 16;
 	skelton.resize(Num_Of_Joints+1);
-	parents.resize(Num_Of_Joints+1);
+	//chain.resize(Num_Of_Joints + 1);
+	//parents.resize(Num_Of_Joints+1);
 	scale = 1;
 	//Initialize vT, vQ
 	vT.resize(17);
 	vQ.resize(17);
 	
+	//Background Sound
+	//PlaySound(TEXT("127-bpm-hip-hop-beat-loop.wav"), NULL, SND_LOOP |SND_ASYNC);
 	
 
 	nameFileout.open(config);
@@ -57,9 +67,19 @@ void SandBox::Init(const std::string &config)
 			data().set_visible(false, 1);
 			//data().SetCenterOfRotation(Eigen::Vector3d(1, 0, 0));
 			//data().MyScale(Eigen::Vector3d(1, 1, scale));
-			//Create_bounding_box();
-			if (selected_data_index == 0)
+			Initialize_Tree(selected_data_index);
+			//Create_bounding_box(selected_data_index);
+			if (selected_data_index == 1) {
+				data().SetCenterOfRotation(center.transpose());
 				V = data().V;
+				//parents.push_back(-1);
+			}
+			if (selected_data_index == 0) {
+				data().SetCenterOfRotation(center.transpose());
+				//data().MyTranslate(Eigen::Vector3d(5, 0, 0), true);
+				//data_list.at(1).set_visible(false, 1);
+			}
+			
 			
 			
 		}
@@ -67,8 +87,9 @@ void SandBox::Init(const std::string &config)
 	}
 	MyTranslate(Eigen::Vector3d(0, 0, -1), true);
 	
-	//Create_Linkaixs(0);
+	data_list.at(0).MyTranslate(Eigen::Vector3d(5, 0, 0), true);
 	
+
 	//Find points for skelton
 	
 		double z = -0.8*scale;
@@ -78,29 +99,6 @@ void SandBox::Init(const std::string &config)
 			z = z + 0.1*scale;
 			
 		}
-	
-	//Draw the skelton points
-	Eigen::MatrixXd V_box(17, 3);
-	V_box <<
-		0, 0, -0.8,
-		0, 0, -0.7,
-		0, 0, -0.6,
-		0, 0, -0.5,
-		0, 0, -0.4,
-		0, 0, -0.3,
-		0, 0, -0.2,
-		0, 0, -0.1,
-		0, 0, 0,
-		0, 0, 0.1,
-		0, 0, 0.2,
-		0, 0, 0.3,
-		0, 0, 0.4,
-		0, 0, 0.5,
-		0, 0, 0.6,
-		0, 0, 0.7,
-		0, 0, 0.8,
-		// Corners of the bounding box
-		data().add_points(V_box, Eigen::RowVector3d(1, 0, 1));
 	
 	
 
@@ -112,21 +110,20 @@ void SandBox::Init(const std::string &config)
 	//the first joint that dont have a parent
 	Joints.emplace_back();
 	Joints.at(0).MyTranslate(skelton.at(0), true);
-	//Joints.at(0).SetCenterOfRotation(center.transpose());
-	parents[0] = -1;
-	//std::cout << parents[0] << "\n";
+	//Joints.at(0).SetCenterOfRotation(Eigen::Vector3d(0, 0, -0.8));
+	//parents[0] = -1;
 	//the 16 other joint that have parents
 	for (int i = 0; i < Num_Of_Joints; i++)
 	{
-		parents[i + 1] = i;
+		//parents[i + 1] = i;
 		Joints.emplace_back();
 		Joints.at(i + 1).MyTranslate(skelton.at(i + 1), true);
-		//Joints.at(i).SetCenterOfRotation(center.transpose());
+		//Joints.at(0).SetCenterOfRotation(Eigen::Vector3d(0, 0, -0.8));
 		//std::cout << parents[i + 1] <<"\n";
 	}
 	
 	
-	destination_position = skelton[Num_Of_Joints];
+	//destination_position = skelton[Num_Of_Joints];
 	U = V;
 	data().set_colors(Eigen::RowVector3d(0.9, 0.1, 0.1));
 	std::cout << "---------------------------------end of initialization----------------------------------- \n";
@@ -140,9 +137,11 @@ SandBox::~SandBox()
 
 void SandBox::Animate()
 {
-	
+	//Eigen::Vector3d dirVec;
 	if (isActive)
 	{
+		/*
+		// Option 1 - without fabrik
 		if (left)
 		{
 			destination_position = Eigen::Vector3d(0, 0, -0.03);
@@ -172,17 +171,145 @@ void SandBox::Animate()
 		//Move The Snake
 		CalcNextPosition();
 		igl::dqs(V, W, vQ, vT, U);
-		data_list.at(0).set_vertices(U);
+		data_list.at(1).set_vertices(U);
 		for (size_t i = 0; i <Num_Of_Joints+1; i++)
 		{
 			skelton[i] = vT[i];
 		}
-		
-	
+		//data_list.at(1).MyTranslate(skelton[8],true);
+		//Create_bounding_box(0);
+
+	*/
+
+	/*
+	//Option 2 - without fabrik
+
+	//std::cout << (Joints[Num_Of_Joints].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3) << "\n";
+	if (left)
+	{
+		Joints[Num_Of_Joints].TranslateInSystem(Joints[Num_Of_Joints].MakeTransd(),Eigen::Vector3d(-0.05, 0, 0),true);
 
 
 	}
+	if (right)
+	{
+
+		Joints[Num_Of_Joints].TranslateInSystem(Joints[Num_Of_Joints].MakeTransd(),Eigen::Vector3d(0.05, 0, 0),true);
+
+	}
+	if (up)
+	{
+
+		Joints[Num_Of_Joints].TranslateInSystem(Joints[Num_Of_Joints].MakeTransd(),Eigen::Vector3d(0, 0, -0.05),true);
+
+	}
+	if (down)
+	{
+
+		Joints[Num_Of_Joints].TranslateInSystem(Joints[Num_Of_Joints].MakeTransd(),Eigen::Vector3d(0, 0, 0.05),true);
+	}
+
+	for (int i = 0; i < Num_Of_Joints ; i++)
+	{
+		vT[i] = skelton[i];
+	}
+	vT[Num_Of_Joints] = (Joints[Num_Of_Joints].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
+	std::cout << (Joints[Num_Of_Joints].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3) << "\n";
+	for (int i = 0; i < Num_Of_Joints; i++)
+	{
+		vT[i] = vT[i] + (vT[i + 1] - vT[i])*0.1;
+	}
+
+	igl::dqs(V, W, vQ, vT, U);
+	data_list.at(1).set_vertices(U);
+	for (int i = 0; i < Num_Of_Joints + 1; i++)
+	{
+		skelton[i] = vT[i];
+	}
+	for (int i = 0; i < Num_Of_Joints; i++)
+	{
+		Joints[i].MyTranslate(skelton[i],true);
+
+	}
+	*/
 	
+
+/*
+	//Option 3 - with fabrik
+		if (right)
+		{
+			Joints[Num_Of_Joints].RotateInSystem(data().MakeTransd(), Eigen::Vector3d(0, 0, 1), 0.05);
+			//dirVec = (Joints[Num_Of_Joints].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3) + Eigen::Vector3d(0, 0, 0.2);
+			//Set_Tip();
+		}
+		if (left)
+		{
+			Joints[Num_Of_Joints].RotateInSystem(Joints[Num_Of_Joints].MakeTransd(), Eigen::Vector3d(0, 0, 1), -0.05);
+			//dirVec = (Joints[Num_Of_Joints].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3) + Eigen::Vector3d(0, 0, -0.2);
+			//Set_Tip();
+		}
+		if (up)
+		{
+			Joints[Num_Of_Joints].RotateInSystem(data().MakeTransd(), Eigen::Vector3d(1, 0, 0), 0.05);
+			//dirVec = (Joints[Num_Of_Joints].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3) + Eigen::Vector3d(0.2, 0, 0);
+			//data().MyRotate(Eigen::Vector3d(1, 0, 0), 0.05);
+			//Set_Tip();
+		}
+		if (down)
+		{
+			Joints[Num_Of_Joints].RotateInSystem(data().MakeTransd(), Eigen::Vector3d(1, 0, 0), -0.05);
+			//dirVec = (Joints[Num_Of_Joints].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3) + Eigen::Vector3d(-0.2, 0,0 );
+			//data().MyRotate(Eigen::Vector3d(1, 0, 0), -0.05);
+			//Set_Tip();
+		}
+		destination_position = (data_list.at(0).MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
+		//destination_position = (data_list[1].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3)+ Eigen::Vector3d (0,0,0.1);
+		for (int i = 0; i < Num_Of_Joints; i++)
+		{
+			chain[i] = skelton[i];
+			//std::cout << "chain at " << i << " is: " << chain[i] << '\n';
+		}
+
+		if ((destination_position - skelton[Num_Of_Joints]).norm() >= 0.1)
+		{
+			Fabrik();
+			for (size_t i = 0; i < vT.size(); i++)
+			{
+				vT[i] = skelton[i];
+			}
+			for (size_t i = 0; i < vQ.size(); i++)
+			{
+				vQ[i] = Eigen::Quaterniond::FromTwoVectors(skelton[i], vT[i]);
+			}
+			igl::dqs(V, W, vQ, vT, U);
+			moveChain();
+			data_list[1].set_vertices(U);
+			Set_Tip();
+
+		}
+		*/
+		
+	//Option 3 - Only Collision Detection
+		if (left)
+			data().MyTranslate(Eigen::Vector3d(-0.05, 0, 0), true);
+		if (right)
+			data().MyTranslate(Eigen::Vector3d(0.05, 0, 0), true);
+		if (up)
+			data().MyTranslate(Eigen::Vector3d(0, 0.05, 0), true);
+		if (down)
+			data().MyTranslate(Eigen::Vector3d(0, -0.05, 0), true);
+		if (Check_Collision()) {
+			left = false;
+			right = false;
+			up = false;
+			down = false;
+			//PlaySound(TEXT("mixkit-bonus-earned-in-video-game-2058.wav"), NULL, SND_NOSTOP);
+			isActive = !isActive;
+		}
+		
+
+
+	}
 }
 
 

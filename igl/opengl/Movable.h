@@ -26,7 +26,7 @@ public:
 	virtual ~Movable() {}
 
 	//-------------------------------------------------------project---------------------------------------------------------
-	
+	void Movable::TranslateInSystem(Eigen::Matrix4d Mat, Eigen::Vector3d amt, bool preRotation);
 	Eigen::Quaterniond GetRotationQ();
 	void Movable::RotateInSystem(Eigen::Matrix4d Mat, Eigen::Vector3d rotAxis, double angle);
 	Eigen::Vector3d Movable::GetCenter();

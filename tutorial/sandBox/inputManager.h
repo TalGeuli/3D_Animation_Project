@@ -3,6 +3,7 @@
 #include "igl/opengl/glfw/Renderer.h"
 #include "sandBox.h"
 #include "igl/look_at.h"
+
 //#include <igl/opengl/glfw/imgui/ImGuiMenu.h>
 //#include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
 //#include <../imgui/imgui.h>
@@ -109,7 +110,9 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 {
 	Renderer* rndr = (Renderer*) glfwGetWindowUserPointer(window);
 	Eigen::Vector3d tmp;
-	Eigen::Vector3f temp;
+	Eigen::Vector3d tempEye;
+	Eigen::Vector3d tempUp;
+	Eigen::Vector3d tempCenter;
 	SandBox* scn = (SandBox*)rndr->GetScene();
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
@@ -176,14 +179,15 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 			break;
 		case 'z':
 		case 'Z':
-			temp[0] = float(scn->skelton.at(16)[0]);
-			std::cout << temp[0] << "\n";
-			temp[1] = float(scn->skelton.at(16)[1]);
-			std::cout << temp[1] << "\n";
-			temp[2] = float(scn->skelton.at(16)[2]);
-			std::cout << temp[2] << "\n";
-			//rndr->TranslateCamera(temp);
-			
+			scn->snakeEye = !scn->snakeEye;
+			//tempEye = (scn->data_list[1].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3) + Eigen::Vector3d(0,0,0.8);
+			//rndr->core().camera_eye << tempEye[0], tempEye[1], tempEye[2];
+			//tempUp = scn->data_list[1].GetRotation() * Eigen::Vector3d(0, 1, 0);
+			//rndr->core().camera_up << tempUp[0], tempUp[1], tempUp[2];
+			//tempCenter = (scn->data_list[0].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
+			//rndr->core().camera_center << tempCenter[0], tempCenter[1], tempCenter[2];
+			//scn->finishLevel = true;
+
 			break;
 		case GLFW_KEY_C:
 			tmp = (scn->MakeTransd().inverse() * Eigen::Vector4d(0, 0, 0, 1)).head<3>();

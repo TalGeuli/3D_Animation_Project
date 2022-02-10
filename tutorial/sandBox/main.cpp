@@ -3,6 +3,9 @@
 #include "tutorial/sandBox/inputManager.h"
 #include "sandBox.h"
 
+
+
+
 int main(int argc, char *argv[])
 {
   Display *disp = new Display(1200, 800, "Wellcome");

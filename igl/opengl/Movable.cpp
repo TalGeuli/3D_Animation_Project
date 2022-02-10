@@ -52,6 +52,12 @@ void Movable:: SetCenterOfRotation(Eigen::Vector3d amt)
 }
 // --------------------------------------------------Project--------------------------------------------------------------------
 
+void Movable::TranslateInSystem(Eigen::Matrix4d Mat, Eigen::Vector3d amt, bool preRotation)
+{
+	Eigen::Vector3d v = Mat.transpose().block<3, 3>(0, 0) * amt; //transpose instead of inverse
+	MyTranslate(v, preRotation);
+}
+
 Eigen::Quaterniond Movable::GetRotationQ()
 {
 	return Eigen::Quaterniond(Tout.rotation());

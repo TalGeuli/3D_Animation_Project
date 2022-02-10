@@ -214,6 +214,30 @@ void Renderer::RotateCamera(float amtX, float amtY)
 	
 }
 
+//------------------------------------------------Project-------------------------------------------------
+
+void Renderer::moveToSnakePosition()
+{
+	if (scn->snakeEye) {
+		Eigen::Vector3d tempEye = (scn->data_list[1].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3) + Eigen::Vector3d(0, 0, 0.8);
+		core().camera_eye << tempEye[0], tempEye[1], tempEye[2];
+		Eigen::Vector3d tempUp = scn->data_list[1].GetRotation() * Eigen::Vector3d(0, 1, 0);
+		core().camera_up << tempUp[0], tempUp[1], tempUp[2];
+		Eigen::Vector3d tempCenter = (scn->data_list[0].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
+		core().camera_center << tempCenter[0], tempCenter[1], tempCenter[2];
+
+	}
+	else
+	{
+		core().camera_eye << 0, 0, 18; 
+		core().camera_center << 0, 0, 0;
+		core().camera_up << 0, 1, 0;
+	}
+}
+//------------------------------------------------Project--------------------------------------------------
+
+
+
 Renderer::~Renderer()
 {
 	//if (scn)

@@ -49,17 +49,26 @@ namespace glfw
     virtual void Init(const std::string config);
 
     //----------------------------------Project----------------------------------
-
+    
+    //Collision Detection
     void Viewer::Create_Linkaixs(int index);
-    void Viewer::Set_Tip();
-    void Viewer::Create_bounding_box();
+    void Viewer::Initialize_Tree(int index);
+    void Viewer::Create_bounding_box(int index);
+    void Viewer::create_bounding_box(Eigen::AlignedBox <double, 3>& box, int index);
+    bool Viewer::Check_Collision();
+    bool Viewer::Check_Collision(igl::AABB<Eigen::MatrixXd, 3>& A, int indexA, igl::AABB<Eigen::MatrixXd, 3>& B, int indexB);
+    bool Viewer::Is_Collide(Eigen::AlignedBox <double, 3>& A_box, int indexA, Eigen::AlignedBox <double, 3>& B_box, int indexB);
+
+    //Weights Calculation
     void Viewer::Calculate_Weights();
-    void Viewer::Fabrik();
-    Eigen::Matrix4d Viewer::CalcParentsTransForJoints(int indx);
-    void Viewer::moveChain();
     Eigen::VectorXd Viewer::creatWiVector(Eigen::Vector4d temp);
-    void Viewer::Fix_rotarion();
+
+    //Movement
+    void Viewer::Set_Tip();
     void Viewer::CalcNextPosition();
+    void Viewer::Fabrik();
+    void Viewer::moveChain();
+    Eigen::Matrix4d Viewer::CalcParentsTransJoints(int index);
     //----------------------------------Project----------------------------------
 
 
@@ -161,7 +170,9 @@ public:
 
     
     Eigen::Vector3d destination_position;
-    
+    std::vector<Eigen::Vector3d>chain;
+
+
     int scale;
     int Num_Of_Joints;
     std::vector<Eigen::Vector3d>skelton;
@@ -172,7 +183,14 @@ public:
     bool right;
     bool left;
     
+    bool levelWindow;
+    bool finishLevel;
+    int score;
+    int level;
     
+    bool snakeEye;
+    
+
     typedef
         std::vector<Eigen::Quaterniond, Eigen::aligned_allocator<Eigen::Quaterniond> >
         RotationList; 
