@@ -206,6 +206,7 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 				scn->up = true;
 			else
 				scn->up = false;
+			scn->rotDir = true;
 			scn->isActive = !scn->isActive;
 
 			break;
@@ -222,6 +223,7 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 				scn->down = true;
 			else
 				scn->down = false;
+			scn->rotDir = true;
 			scn->isActive = !scn->isActive;
 			break;
 		case GLFW_KEY_LEFT:
@@ -237,6 +239,7 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 				scn->left = true;
 			else
 				scn->left = false;
+			scn->rotDir = true;
 			scn->isActive = !scn->isActive;
 			break;
 		case GLFW_KEY_RIGHT:
@@ -252,6 +255,7 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 				scn->right = true;
 			else
 				scn->right = false;
+			scn->rotDir = true;
 			scn->isActive = !scn->isActive;
 			break;
 

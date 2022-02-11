@@ -168,7 +168,8 @@ public:
 
     //-------------------------------Project-------------------------------
 
-    
+    std::vector<int> parentsJoints;
+
     Eigen::Vector3d destination_position;
     std::vector<Eigen::Vector3d>chain;
 
@@ -182,7 +183,8 @@ public:
     bool down;
     bool right;
     bool left;
-    
+    bool rotDir;
+
     bool levelWindow;
     bool finishLevel;
     int score;

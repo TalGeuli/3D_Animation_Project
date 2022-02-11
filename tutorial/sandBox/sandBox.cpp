@@ -25,7 +25,7 @@ void SandBox::Init(const std::string &config)
 	left = false;
 	up = false;
 	down = false;
-
+	rotDir = false;
 	snakeEye = 0;
 	level = 1;
 	score = 0;
@@ -34,8 +34,8 @@ void SandBox::Init(const std::string &config)
 
 	Num_Of_Joints = 16;
 	skelton.resize(Num_Of_Joints+1);
-	//chain.resize(Num_Of_Joints + 1);
-	//parents.resize(Num_Of_Joints+1);
+	chain.resize(Num_Of_Joints + 1);
+	parentsJoints.resize(Num_Of_Joints+1);
 	scale = 1;
 	//Initialize vT, vQ
 	vT.resize(17);
@@ -86,6 +86,7 @@ void SandBox::Init(const std::string &config)
 		nameFileout.close();
 	}
 	MyTranslate(Eigen::Vector3d(0, 0, -1), true);
+	data_list.at(1).MyTranslate(Eigen::Vector3d(0, 0, 0), true);
 	
 	data_list.at(0).MyTranslate(Eigen::Vector3d(5, 0, 0), true);
 	
@@ -105,17 +106,18 @@ void SandBox::Init(const std::string &config)
 	//Calaulate the weights for each vertex
 	Calculate_Weights();
 	data().MyRotate(Eigen::Vector3d(0, 1, 0), 3.14 / 2);
+	data_list.at(1).MyRotate(Eigen::Vector3d(0, 1, 0), 3.14 / 2);
 	
 	//Create Joints
 	//the first joint that dont have a parent
 	Joints.emplace_back();
 	Joints.at(0).MyTranslate(skelton.at(0), true);
 	//Joints.at(0).SetCenterOfRotation(Eigen::Vector3d(0, 0, -0.8));
-	//parents[0] = -1;
+	parentsJoints[0] = -1;
 	//the 16 other joint that have parents
 	for (int i = 0; i < Num_Of_Joints; i++)
 	{
-		//parents[i + 1] = i;
+		parentsJoints[i + 1] = i;
 		Joints.emplace_back();
 		Joints.at(i + 1).MyTranslate(skelton.at(i + 1), true);
 		//Joints.at(0).SetCenterOfRotation(Eigen::Vector3d(0, 0, -0.8));
@@ -289,7 +291,8 @@ void SandBox::Animate()
 		}
 		*/
 		
-	//Option 3 - Only Collision Detection
+	//Option 4 - Only Collision Detection
+		
 		if (left)
 			data().MyTranslate(Eigen::Vector3d(-0.05, 0, 0), true);
 		if (right)
@@ -298,6 +301,7 @@ void SandBox::Animate()
 			data().MyTranslate(Eigen::Vector3d(0, 0.05, 0), true);
 		if (down)
 			data().MyTranslate(Eigen::Vector3d(0, -0.05, 0), true);
+			
 		if (Check_Collision()) {
 			left = false;
 			right = false;
@@ -306,6 +310,58 @@ void SandBox::Animate()
 			//PlaySound(TEXT("mixkit-bonus-earned-in-video-game-2058.wav"), NULL, SND_NOSTOP);
 			isActive = !isActive;
 		}
+		/*
+			//with Fabrik
+		destination_position = (data_list.at(2).MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
+		
+		for (int i = 0; i <= Num_Of_Joints; i++)
+		{
+			chain[i] = skelton[i];
+			//std::cout << "chain at " << i << " is: " << chain[i] << '\n';
+		}
+		if ((destination_position - skelton[Num_Of_Joints]).norm() >= 0.1)
+		{
+			Fabrik();
+			for (size_t i = 0; i < vT.size(); i++)
+			{
+				vT[i] = chain[i];
+			}
+			for (size_t i = 0; i < vQ.size(); i++)
+			{
+				vQ[i] = Eigen::Quaterniond::FromTwoVectors(skelton[i], vT[i]);
+			}
+			moveChain();
+			igl::dqs(V, W, vQ, vT, U);
+			data_list.at(1).set_vertices(U);
+			Set_Tip();
+		}
+		*/
+		/*
+			//without fabrik
+		Joints[Num_Of_Joints].MyTranslate((data_list.at(2).MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3),true);
+		for (int i = 0; i < Num_Of_Joints; i++)
+		{
+			vT[i] = skelton[i];
+		}
+		vT[Num_Of_Joints] = (Joints[Num_Of_Joints].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
+		std::cout << (Joints[Num_Of_Joints].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3) << "\n";
+		for (int i = 0; i < Num_Of_Joints; i++)
+		{
+			vT[i] = vT[i] + (vT[i + 1] - vT[i]) * 0.1;
+		}
+
+		igl::dqs(V, W, vQ, vT, U);
+		data_list.at(1).set_vertices(U);
+		for (int i = 0; i < Num_Of_Joints + 1; i++)
+		{
+			skelton[i] = vT[i];
+		}
+		for (int i = 0; i < Num_Of_Joints; i++)
+		{
+			Joints[i].MyTranslate(skelton[i], true);
+
+		}
+		*/
 		
 
 

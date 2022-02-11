@@ -480,7 +480,7 @@ namespace glfw
 
   //Snake Movment
 
-  /*
+  
   void Viewer::Set_Tip()
   {
       Eigen::Vector3d O = (Joints[0].MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
@@ -513,7 +513,7 @@ namespace glfw
       //tip_position = O;
 
   }
-  */
+  
 
   void Viewer::CalcNextPosition()
   {
@@ -529,10 +529,10 @@ namespace glfw
   }
 
 
-  /*
+  
   void Viewer::Fabrik()
   {
-      chain[Num_Of_Joints] = (data_list.at(0).MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);;
+      chain[Num_Of_Joints] = (data_list.at(2).MakeTransd() * Eigen::Vector4d(0, 0, 0, 1)).head(3);
       for (int i = Num_Of_Joints - 1; i >= 0; i--)
       {
           Eigen::Vector3d curr = chain[i];
@@ -544,8 +544,8 @@ namespace glfw
       }
 
   }
-  */
-  /*
+  
+  
     void Viewer::moveChain()
     {
         Eigen::Vector3d currVec;
@@ -569,21 +569,21 @@ namespace glfw
         }
 
     }
-    */
-  /*
+    
+  
     Eigen::Matrix4d Viewer::CalcParentsTransJoints(int index)
     {
         Eigen::Matrix4d prevTrans = Eigen::Matrix4d::Identity();
 
-        for (int i = index; parents[i] >= 0; i = parents[i])
+        for (int i = index; parentsJoints[i] >= 0; i = parentsJoints[i])
         {
             //std::cout << "parent matrix:\n" << scn->data_list[scn->parents[i]].MakeTrans() << std::endl;
-            prevTrans = Joints[parents[i]].MakeTransd() * prevTrans;
+            prevTrans = Joints[parentsJoints[i]].MakeTransd() * prevTrans;
         }
 
         return prevTrans;
     }
-    */
+    
   
   
   //------------------------------------------------Project-----------------------------------
