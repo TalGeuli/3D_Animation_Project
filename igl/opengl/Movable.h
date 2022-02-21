@@ -30,6 +30,7 @@ public:
 	Eigen::Quaterniond GetRotationQ();
 	void Movable::RotateInSystem(Eigen::Matrix4d Mat, Eigen::Vector3d rotAxis, double angle);
 	Eigen::Vector3d Movable::GetCenter();
+	
 
 	//-------------------------------------------------------project----------------------------------------------------------
 private:

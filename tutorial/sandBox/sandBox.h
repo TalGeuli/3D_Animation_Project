@@ -8,6 +8,7 @@ public:
 	SandBox();
 	~SandBox();
 	void Init(const std::string& config);
+	void SandBox::SetTexture(int index, std::string texturePath);
 	double doubleVariable;
 private:
 	// Prepare array-based edge data structures and priority queue

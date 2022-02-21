@@ -4,11 +4,12 @@
 #include "sandBox.h"
 
 
-
+#define VIEWPORT_WIDTH 1000
+#define VIEWPORT_HEIGHT 800
 
 int main(int argc, char *argv[])
 {
-  Display *disp = new Display(1200, 800, "Wellcome");
+  Display *disp = new Display(1200, 800, "Snake Game");
   Renderer renderer;
 
   SandBox viewer;
@@ -17,8 +18,11 @@ int main(int argc, char *argv[])
   viewer.Init("configuration.txt");
   
   Init(*disp, menu);
-  renderer.init(&viewer,2,menu);
+  renderer.init(&viewer,2,menu, disp);
   
+  
+
+
   disp->SetRenderer(&renderer);
   disp->launch_rendering(true);
   delete menu;

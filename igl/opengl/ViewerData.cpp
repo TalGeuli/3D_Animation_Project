@@ -38,6 +38,19 @@ IGL_INLINE igl::opengl::ViewerData::ViewerData()
   clear();
 };
 
+void igl::opengl::ViewerData::RealScale(const Eigen::Vector3d& scale)
+{
+    double zCord;
+    for (size_t i = 0; i < V.rows(); i++)
+    {
+        V(i, 0) = V(i, 0) * scale.x();
+        V(i, 1) = V(i, 1) * scale.y();
+        V(i, 2) = V(i, 2) * scale.z();
+
+    }
+    set_mesh(V, F);
+}
+
 IGL_INLINE void igl::opengl::ViewerData::set_face_based(bool newvalue)
 {
   if (face_based != newvalue)

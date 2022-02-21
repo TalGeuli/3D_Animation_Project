@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 #include <GLFW/glfw3.h>
+#include <vector>
+//#include <external/learnopengl/camera.h>
+
 //#include "igl/opengl/glfw/renderer.h"
 #define EXIT_FAILURE 1
 struct GLFWwindow;
@@ -11,6 +14,12 @@ public:
 	Display(int windowWidth, int windowHeight, const std::string& title);
 	
 	bool launch_rendering(bool loop);
+
+	//----------------------------------------project-------------------------------------------------
+
+	unsigned int loadCubemap(std::vector<std::string> faces);
+	//Camera camera;
+	//----------------------------------------project-------------------------------------------------
 
 	void SwapBuffers();
 	void PollEvents();

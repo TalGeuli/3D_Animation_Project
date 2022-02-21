@@ -68,6 +68,10 @@ void Movable::RotateInSystem(Eigen::Matrix4d Mat, Eigen::Vector3d rotAxis, doubl
 	Eigen::Vector3d v = Mat.transpose().block<3, 3>(0, 0) * rotAxis; //transpose instead of inverse
 	MyRotate(v.normalized(), angle);
 }
+
+
+
+
 // ----------------------------------------------------Project-----------------------------------------------------------------------
 
 //angle in radians

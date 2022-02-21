@@ -7,6 +7,8 @@
 #include <igl/opengl/glfw/imgui/ImGuiMenu.h>
 #include <igl/opengl/glfw/imgui/ImGuiHelpers.h>
 #include <../imgui/imgui.h>
+
+
 struct GLFWwindow;
 
 
@@ -16,7 +18,7 @@ public:
 	Renderer();
 	~Renderer();
 	IGL_INLINE void draw( GLFWwindow* window);
-	IGL_INLINE void init(igl::opengl::glfw::Viewer* scn,int coresNum, igl::opengl::glfw::imgui::ImGuiMenu *_menu);
+	IGL_INLINE void init(igl::opengl::glfw::Viewer* scn,int coresNum, igl::opengl::glfw::imgui::ImGuiMenu *_menu, Display* display);
 	
 	//IGL_INLINE bool key_pressed(unsigned int unicode_key, int modifiers);
 
@@ -107,6 +109,9 @@ public:
 	//------------------------------Project-----------------------------------------------------
 	
 	void moveToSnakePosition();
+	void Renderer::Draw_menu_and_data();
+	Display* display;
+	bool moveCamera;
 
 	//------------------------------Project-----------------------------------------------------
 
@@ -124,5 +129,9 @@ private:
 	double doubleVariable;
 	igl::opengl::glfw::imgui::ImGuiMenu* menu;
 	double z;
+	//bool draw_menu_and_data;
+
+	
+	
 };
 

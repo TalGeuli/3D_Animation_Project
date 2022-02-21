@@ -45,6 +45,13 @@ class ViewerData : public Movable
 public:
   ViewerData();
   
+  //----------------------------------------------Project---------------------------------------------
+
+  void igl::opengl::ViewerData::RealScale(const Eigen::Vector3d& scale);
+
+  //----------------------------------------------Project---------------------------------------------
+
+
   // Empty all fields
   IGL_INLINE void clear();
 

@@ -113,6 +113,9 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 	Eigen::Vector3d tempEye;
 	Eigen::Vector3d tempUp;
 	Eigen::Vector3d tempCenter;
+
+	std::string texturePath = "D:/Animation3DProjects/Project/tutorial/textures/box0.bmp";
+
 	SandBox* scn = (SandBox*)rndr->GetScene();
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
@@ -259,8 +262,14 @@ static void glfw_key_callback(GLFWwindow* window, int key, int scancode, int act
 			scn->isActive = !scn->isActive;
 			break;
 
-		case ' ':
+		case 'e':
+		case 'E':
+			
+			scn->SetTexture(1, texturePath);
+			break;
 
+		case ' ':
+			scn->skinning = !scn->skinning;
 			break;
 		
 		default: 

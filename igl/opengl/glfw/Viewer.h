@@ -184,6 +184,7 @@ public:
     bool right;
     bool left;
     bool rotDir;
+    bool skinning;
 
     bool levelWindow;
     bool finishLevel;

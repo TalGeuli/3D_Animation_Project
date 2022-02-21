@@ -263,8 +263,8 @@ namespace glfw
       {
           if (A.is_leaf() & B.is_leaf())
           {
-              create_bounding_box(B_box, indexB);
-              create_bounding_box(A_box, indexA);
+              //create_bounding_box(B_box, indexB);
+              //create_bounding_box(A_box, indexA);
               return true;
           }
           if (A.is_leaf())
@@ -432,11 +432,7 @@ namespace glfw
       double index1 = temp[1];
       double weight2 = temp[2];
       double index2 = temp[3];
-      /*std::cout << weight1 << " - weight1\n";
-      std::cout << index1 << " - index1\n";
-      std::cout << weight2 << " - weight2\n";
-      std::cout << index2 << " - index2\n";
-      */
+     
       for (double i = 0; i < 17; i++)
       {
           if (i == index1)
@@ -469,8 +465,7 @@ namespace glfw
           weight1 = abs(zCord - upBound) * 10;
           weight2 = 1 - weight1;
           W.row(i) = creatWiVector(Eigen::Vector4d(weight1, lowBound * 10 + 8, weight2, upBound * 10 + 8));
-         // std::cout << i << " weightVector \n";
-          //std::cout << W.row(i) << "\n";
+         
       }
      
       
@@ -577,7 +572,7 @@ namespace glfw
 
         for (int i = index; parentsJoints[i] >= 0; i = parentsJoints[i])
         {
-            //std::cout << "parent matrix:\n" << scn->data_list[scn->parents[i]].MakeTrans() << std::endl;
+            
             prevTrans = Joints[parentsJoints[i]].MakeTransd() * prevTrans;
         }
 

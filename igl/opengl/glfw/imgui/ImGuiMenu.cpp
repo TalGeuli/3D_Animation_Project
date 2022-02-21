@@ -192,7 +192,7 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     static bool no_titlebar = false;
     static bool no_scrollbar = false;
     static bool no_menu = true;
-    static bool no_move = false;
+    static bool no_move = true;
     static bool no_resize = false;
     static bool no_collapse = false;
     static bool no_close = false;
